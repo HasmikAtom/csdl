@@ -7,6 +7,7 @@
 
 #include <libtorrent/fingerprint.hpp>
 #include <libtorrent/torrent_handle.hpp>
+#include <libtorrent/magnet_uri.hpp>
 
 extern "C" {
 // given a config, create a session
