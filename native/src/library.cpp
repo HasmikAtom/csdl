@@ -8,6 +8,7 @@
 #include <libtorrent/fingerprint.hpp>
 #include <libtorrent/torrent_handle.hpp>
 #include <libtorrent/magnet_uri.hpp>
+#include <libtorrent/add_torrent_params.hpp>
 
 extern "C" {
 // given a config, create a session
@@ -148,7 +149,22 @@ lt::torrent_info* create_torrent_file(const char* file_path)
 
 lt::torrent_info* create_torrent_magnet(const char* magnet)
 {
-    return new lt::parse_magnet_uri(std::string_view(magnet));
+    // return lt::parse_magnet_uri(std::string_view(magnet));
+
+    lt::error_code ec;
+    lt::add_torrent_params p = lt::parse_magnet_uri(std::string_view(magnet), ec);
+    
+    if (ec) {
+        std::cerr << "Error parsing magnet URI: " << ec.message() << std::endl;
+        return nullptr;
+    }
+    
+    if (p.info_hashes.is_all_zeros()) {
+        std::cerr << "No info hash available in magnet URI" << std::endl;
+        return nullptr;
+    }
+
+    return new lt::torrent_info(p.info_hashes);
 }
 
 void destroy_torrent(lt::torrent_info* torrent)
