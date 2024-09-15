@@ -148,7 +148,7 @@ lt::torrent_info* create_torrent_file(const char* file_path)
     return new lt::torrent_info(std::string(file_path));
 }
 
-lt::add_torrent_params* create_torrent_magnet(const char* magnet)
+lt::add_torrent_params create_torrent_magnet(const char* magnet)
 {
     return lt::parse_magnet_uri(lt::string_view(magnet));
 }
@@ -195,7 +195,7 @@ lt::torrent_handle* attach_torrent(lt::session* session, lt::torrent_info* torre
     return nullptr;
 }
 
-lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_params* params, const char* save_path)
+lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_params params, const char* save_path)
 {
     if (session == nullptr || params == nullptr)
     {
@@ -207,16 +207,16 @@ lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_
 
     if (!save_path_copy.empty())
     {
-        params->save_path = save_path_copy;
+        params.save_path = save_path_copy;
     }
 
     // enable paused-by-default, disable auto-management
-    params->flags |= lt::torrent_flags::paused;
-    params->flags &= ~lt::torrent_flags::auto_managed;
+    params.flags |= lt::torrent_flags::paused;
+    params.flags &= ~lt::torrent_flags::auto_managed;
 
     // // set torrent info - make_shared creates a copy
     // params.ti = std::make_shared<lt::torrent_info>(*torrent);
-    auto handle = new lt::torrent_handle(session->add_torrent(*params));
+    auto handle = new lt::torrent_handle(session->add_torrent(params));
 
     if (handle->is_valid())
     {
