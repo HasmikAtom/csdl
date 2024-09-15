@@ -119,6 +119,16 @@ internal static partial class NativeMethods
     public static partial IntPtr AttachTorrent(IntPtr sessionHandle, IntPtr torrentHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string savePath);
 
     /// <summary>
+    /// Attach a torrent to a session through a magnet link, allowing it to be downloaded
+    /// </summary>
+    /// <param name="sessionHandle">The session handle to attach the torrent to</param>
+    /// <param name="paramsHandle">The handle of the add_torrent_params object to attach</param>
+    /// <param name="savePath">The path to save the contents of the torrent to</param>
+    /// <returns>A torrent-session handle</returns>
+    [LibraryImport(LibraryName, EntryPoint = "attach_torrent_params", StringMarshalling = StringMarshalling.Utf8)]
+    public static partial IntPtr AttachTorrentParams(IntPtr sessionHandle, IntPtr paramsHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string savePath);
+
+    /// <summary>
     /// Detaches a torrent from a session, stopping the download.
     /// </summary>
     /// <param name="sessionHandle">The session handle to detach from</param>
