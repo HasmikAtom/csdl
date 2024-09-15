@@ -218,7 +218,7 @@ lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_
 
     // // set torrent info - make_shared creates a copy
     // params.ti = std::make_shared<lt::torrent_info>(*torrent);
-    auto handle = new lt::torrent_handle(session->add_torrent(params*));
+    auto handle = new lt::torrent_handle(session->add_torrent(*params));
 
     if (handle->is_valid())
     {
