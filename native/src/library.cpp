@@ -148,9 +148,11 @@ lt::torrent_info* create_torrent_file(const char* file_path)
     return new lt::torrent_info(std::string(file_path));
 }
 
-lt::add_torrent_params create_torrent_magnet(const char* magnet)
+lt::add_torrent_params* create_torrent_magnet(const char* magnet)
 {
-    return lt::parse_magnet_uri(lt::string_view(magnet));
+   lt::add_torrent_params* tp = new lt::add_torrent_params();
+    *tp = lt::parse_magnet_uri(lt::string_view(magnet));
+    return tp;
 }
 
 void destroy_torrent(lt::torrent_info* torrent)
@@ -195,7 +197,7 @@ lt::torrent_handle* attach_torrent(lt::session* session, lt::torrent_info* torre
     return nullptr;
 }
 
-lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_params params, const char* save_path)
+lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_params* params, const char* save_path)
 {
     if (session == nullptr || params == nullptr)
     {

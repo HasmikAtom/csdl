@@ -29,12 +29,12 @@ extern "C" {
 
     // torrent control
     CSDL_EXPORT lt::torrent_info* create_torrent_file(const char* file_path);
-    CSDL_EXPORT lt::add_torrent_params create_torrent_magnet(const char* magnet);
+    CSDL_EXPORT lt::add_torrent_params* create_torrent_magnet(const char* magnet);
     CSDL_EXPORT lt::torrent_info* create_torrent_bytes(const char* data, long length);
     CSDL_EXPORT void destroy_torrent(lt::torrent_info* torrent);
 
     CSDL_EXPORT lt::torrent_handle* attach_torrent(lt::session* session, lt::torrent_info* torrent, const char* save_path);
-    CSDL_EXPORT lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_params params, const char* save_path);
+    CSDL_EXPORT lt::torrent_handle* attach_torrent_params(lt::session* session, lt::add_torrent_params* params, const char* save_path);
     CSDL_EXPORT void detach_torrent(lt::session* session, lt::torrent_handle* torrent);
 
     // torrent info
