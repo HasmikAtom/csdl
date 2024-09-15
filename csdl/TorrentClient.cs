@@ -206,6 +206,53 @@ public class TorrentClient : IDisposable
     }
 
     /// <summary>
+    /// Attaches a torrent to the session, allowing it to be downloaded/uploaded.
+    /// </summary>
+    /// <param name="torrent">The <see cref="TorrentInfo"/> to attach</param>
+    /// <param name="savePath">The path to save/read data from</param>
+    /// <returns>A <see cref="TorrentManager"/> allowing the torrent to be controlled.</returns>
+    /// <exception cref="InvalidOperationException">The torrent was unable to be attached to the underlying session</exception>
+    public TorrentManager AttachTorrentParams(TorrentInfo torrent, string savePath = null)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
+        if (_attachedManagers.ContainsKey(torrent.Metadata.InfoHash))
+        {
+            throw new InvalidOperationException("Torrent is already attached to this session.");
+        }
+
+        savePath ??= DefaultDownloadPath;
+
+        // relative paths will be combined with the default download path
+        if (!Path.IsPathRooted(savePath))
+        {
+            savePath = Path.Combine(DefaultDownloadPath, savePath);
+        }
+
+        // ensure the save path exists
+        if (!Directory.Exists(savePath))
+        {
+            Directory.CreateDirectory(savePath);
+        }
+
+        var handle = NativeMethods.AttachTorrentParams(_handle, torrent.InfoHandle, Path.GetFullPath(savePath));
+
+        if (handle == IntPtr.Zero)
+        {
+            throw new InvalidOperationException("Failed to attach torrent to session.");
+        }
+
+        var manager = new TorrentManager(handle, savePath, torrent);
+        _attachedManagers.TryAdd(manager.Info.Metadata.InfoHash, manager);
+
+        return manager;
+    }
+
+
+
+
+
+    /// <summary>
     /// Detaches a torrent from the session, stopping any ongoing transfers.
     /// </summary>
     /// <param name="manager">The manager to detach</param>
