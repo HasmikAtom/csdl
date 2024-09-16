@@ -42,13 +42,13 @@ public class TorrentInfo
     /// <exception cref="InvalidOperationException">The file could not be loaded</exception>
     public TorrentInfo(string fileName)
     {
-        if (File.Exists(fileName))
+        if (!File.Exists(fileName))
         {
-            InfoHandle = NativeMethods.CreateTorrentFromFile(fileName);
+            InfoHandle = NativeMethods.CreateTorrentFromMagnet(fileName);
            
         } else
         {
-            InfoHandle = NativeMethods.CreateTorrentFromMagnet(fileName);
+            InfoHandle = NativeMethods.CreateTorrentFromFile(fileName);
         }
 
 
