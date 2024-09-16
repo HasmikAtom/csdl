@@ -150,7 +150,7 @@ lt::torrent_info* create_torrent_file(const char* file_path)
 
 lt::add_torrent_params* create_torrent_magnet(const char* magnet)
 {
-    add_torrent_params atp;
+    lt::add_torrent_params atp;
     atp = lt::parse_magnet_uri(lt::string_view(magnet));
     return *atp;
 }
